@@ -1736,6 +1736,16 @@
             return true;
         };
 
+        TagParser.prototype.parseValue = function () {
+            var name;
+            name = parseName(this._last, sloppy && isParamTitle(this._title), false);
+            if (!name) {
+                return true;
+            }
+            this._tag.value = name;
+            return true;
+        };
+
         TagParser.prototype.parseName = function () {
             var assign, name;
 
@@ -1877,6 +1887,8 @@
         Rules = {
             // http://usejsdoc.org/tags-access.html
             'access': ['parseAccess'],
+            // http://usejsdoc.org/tags-default.html
+            'default': ['parseValue', 'ensureEnd'],
             // http://usejsdoc.org/tags-global.html
             'global': ['ensureEnd'],
             // http://usejsdoc.org/tags-inner.html

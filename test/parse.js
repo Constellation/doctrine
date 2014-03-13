@@ -109,6 +109,31 @@ describe('parse', function () {
         res.tags[2].should.have.property('title', 'const');
     });
 
+    it('default', function () {
+        var res = doctrine.parse('/** @default */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+    });
+
+    it('const with name', function () {
+        var res = doctrine.parse('/** @default defaultvalue */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', 'defaultvalue');
+    });
+
+    it('default with name', function () {
+        var res = doctrine.parse('/** @default defaultvalue */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', 'defaultvalue');
+    });
+
+    it('default with type and name', function () {
+        var res = doctrine.parse('/** @default {String} constname */', { unwrap: true });
+        res.tags.should.have.length(0);
+    });
+
 
     it('mixes', function () {
         var res = doctrine.parse('/** @mixes */', { unwrap: true });
