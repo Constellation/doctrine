@@ -94,6 +94,10 @@
              '\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\uFEFF'.indexOf(ch) >= 0);
     }
 
+    function isValue(ch) {
+      return !(isWhiteSpace(ch) || isLineTerminator(ch));
+    }
+
     function isDecimalDigit(ch) {
         return '0123456789'.indexOf(ch) >= 0;
     }
@@ -1588,6 +1592,17 @@
             return identifier;
         }
 
+        function scanValue(last) {
+            var value;
+
+            skipWhiteSpace(last);
+            value = advance();
+            while (index < last && isValue(source[index])) {
+                value += advance();
+            }
+            return value;
+        }
+
         function skipWhiteSpace(last) {
             while (index < last && (isWhiteSpace(source[index]) || isLineTerminator(source[index]))) {
                 advance();
@@ -1737,12 +1752,12 @@
         };
 
         TagParser.prototype.parseValue = function () {
-            var name;
-            name = parseName(this._last, sloppy && isParamTitle(this._title), false);
-            if (!name) {
+            var value;
+            value = scanValue(this._last);
+            if (!value) {
                 return true;
             }
-            this._tag.value = name;
+            this._tag.value = value;
             return true;
         };
 

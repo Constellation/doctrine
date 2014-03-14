@@ -115,25 +115,60 @@ describe('parse', function () {
         res.tags[0].should.have.property('title', 'default');
     });
 
-    it('const with name', function () {
+    it('default with value', function () {
         var res = doctrine.parse('/** @default defaultvalue */', { unwrap: true });
         res.tags.should.have.length(1);
         res.tags[0].should.have.property('title', 'default');
         res.tags[0].should.have.property('value', 'defaultvalue');
     });
 
-    it('default with name', function () {
+    it('default with value', function () {
         var res = doctrine.parse('/** @default defaultvalue */', { unwrap: true });
         res.tags.should.have.length(1);
         res.tags[0].should.have.property('title', 'default');
         res.tags[0].should.have.property('value', 'defaultvalue');
     });
 
-    it('default with type and name', function () {
-        var res = doctrine.parse('/** @default {String} constname */', { unwrap: true });
+    it('default with type and value', function () {
+        var res = doctrine.parse('/** @default {String} value */', { unwrap: true });
         res.tags.should.have.length(0);
     });
 
+    it('default with spaced value', function () {
+        var res = doctrine.parse('/** @default thing thing thing */', { unwrap: true });
+        res.tags.should.have.length(0);
+    });
+
+    it('default with null value', function () {
+        var res = doctrine.parse('/** @default null */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', 'null');
+    });
+
+    it('default with boolean value', function () {
+        var res = doctrine.parse('/** @default true */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', 'true');
+
+        var res = doctrine.parse('/** @default false */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', 'false');
+    });
+
+    it('default with numeric value', function () {
+        var res = doctrine.parse('/** @default 1212 */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', '1212');
+
+        var res = doctrine.parse('/** @default 1212.22 */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'default');
+        res.tags[0].should.have.property('value', '1212.22');
+    });
 
     it('mixes', function () {
         var res = doctrine.parse('/** @mixes */', { unwrap: true });
