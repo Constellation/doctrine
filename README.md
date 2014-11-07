@@ -51,6 +51,7 @@ and gets following information
 see [demo page](http://constellation.github.com/doctrine/demo/index.html) more detail.
 
 ### Options
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/Constellation/doctrine?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 #### doctrine.parse
 We can pass options to `doctrine.parse(comment, options)`.
