@@ -1934,6 +1934,48 @@ describe('recovery tests', function() {
          res.tags[1].should.have.property('name', 'f2');
 	});
 
+    it ('return with type', function() {
+        var res = doctrine.parse(
+            [
+                "@returns {string} test"
+            ].join('\n'), { recoverable: true });
+
+        // return tag should exist
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'returns');
+        res.tags[0].should.have.property('description', 'test');
+        res.tags[0].type.should.have.property('name', 'string');
+        res.tags[0].type.should.have.property('type', 'NameExpression');
+    });
+
+    it ('return with type undefined', function() {
+        var res = doctrine.parse(
+            [
+                "@returns {undefined} test"
+            ].join('\n'), { unwrap: true, sloppy: true });
+
+        // return tag should exist
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'returns');
+        res.tags[0].should.have.property('description', 'test');
+        res.tags[0].type.should.have.property('name', 'undefined');
+        res.tags[0].type.should.have.property('type', 'UndefinedLiteral');
+    });
+
+    it ('return with type null', function() {
+        var res = doctrine.parse(
+            [
+                "@returns {null} test"
+            ].join('\n'), { unwrap: true, sloppy: true });
+
+        // return tag should exist
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'returns');
+        res.tags[0].should.have.property('description', 'test');
+        res.tags[0].type.should.have.property('name', 'null');
+        res.tags[0].type.should.have.property('type', 'NullLiteral');
+    });
+
 	it ('return 1', function() {
 		var res = doctrine.parse(
             [
