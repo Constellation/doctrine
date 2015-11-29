@@ -325,6 +325,35 @@ describe('parse', function () {
         res.tags[0].should.have.property('name', 'thingName.name');
     });
 
+    it('module with name which has slash', function(){
+        var res = doctrine.parse('/** @module path/to/thingName.name */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'module');
+        res.tags[0].should.have.property('name', 'path/to/thingName.name');
+    });
+
+    it('module with name which has dash', function(){
+        var res = doctrine.parse('/** @module thing-name.name */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'module');
+        res.tags[0].should.have.property('name', 'thing-name.name');
+    });
+
+    it('module with name which has adjacent slashes', function(){
+        var res = doctrine.parse('/** @module path//to/thingName.name */', { unwrap: true });
+        res.tags.should.have.length(0);
+    });
+
+    it('module with name which has adjacent dashes', function(){
+        var res = doctrine.parse('/** @module thing--name.name */', { unwrap: true });
+        res.tags.should.have.length(0);
+    });
+
+    it('module with name which has adjacent slash and dash', function(){
+        var res = doctrine.parse('/** @module thing/-name.name */', { unwrap: true });
+        res.tags.should.have.length(0);
+    });
+
     it('module with type', function () {
         var res = doctrine.parse('/** @module {Object} thingName.name */', { unwrap: true });
         res.tags.should.have.length(1);
