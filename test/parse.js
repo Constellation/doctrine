@@ -379,6 +379,13 @@ describe('parse', function () {
         res.tags[0].should.have.property('name', 'thingName~name');
     });
 
+    it('quoted name with colon character', function () {
+        var res = doctrine.parse('/** @name "thingName:name" */', { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'name');
+        res.tags[0].should.have.property('name', 'thingName:name');
+    });
+
     it('name', function () {
         var res = doctrine.parse('/** @name {thing} thingName.name */', { unwrap: true });
         // name does not accept type
