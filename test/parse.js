@@ -2260,7 +2260,6 @@ describe('optional properties', function() {
             });
     });
 
-
     it('failure 1', function() {
         doctrine.parse(
             ["/**", " * @property [val", " */"].join('\n'), {
@@ -2291,6 +2290,7 @@ describe('optional properties', function() {
                 }]
             });
     });
+
     it('success 2', function() {
         doctrine.parse(
             ["/**", " * @property {String=} val", " */"].join('\n'), {
@@ -2443,7 +2443,6 @@ describe('optional properties', function() {
                 }]
             });
     });
-
 
     it('default array within white spaces', function() {
         doctrine.parse(
