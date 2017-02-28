@@ -838,7 +838,10 @@ describe('parse', function () {
               " * @prop thingName - does some stuff",
               "*/"
             ].join('\n'), { unwrap: true });
-        res.tags.should.have.length(0);
+        res.tags[0].should.have.property('title', 'prop');
+        res.tags[0].should.have.property('name', 'thingName');
+        res.tags[0].should.have.property('description', 'does some stuff');
+        res.tags[0].should.have.property('type', null);
     });
 
 
@@ -863,7 +866,10 @@ describe('parse', function () {
               " * @property thingName - does some stuff",
               "*/"
             ].join('\n'), { unwrap: true });
-        res.tags.should.have.length(0);
+        res.tags[0].should.have.property('title', 'property');
+        res.tags[0].should.have.property('name', 'thingName');
+        res.tags[0].should.have.property('description', 'does some stuff');
+        res.tags[0].should.have.property('type', null);
     });
 
 
