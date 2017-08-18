@@ -1,6 +1,7 @@
 /*
  * @fileoverview Main Doctrine object
  * @author Yusuke Suzuki <utatane.tea@gmail.com>
+ * @author Joel Day <joelday@gmail.com>
  */
 /*global require describe it*/
 /*jslint node:true */
@@ -53,10 +54,14 @@ describe('stringify', function () {
     testStringify("()");
     testStringify("(String|Number)");
 
+    // intersection types
+    testStringify("(String&Number)");
+
     // Arrays
     testStringify("[String]");
     testStringify("[String,Number]");
     testStringify("[(String|Number)]");
+    testStringify("[(String&Number)]");
 
     // Record types
     testStringify("{a}");
@@ -67,6 +72,9 @@ describe('stringify', function () {
     testStringify("{a:(String|Number),b,c:Array.<String>}");
     testStringify("...{a:(String|Number),b,c:Array.<String>}");
     testStringify("{a:(String|Number),b,c:Array.<String>}=");
+    testStringify("{a:(String&Number),b,c:Array.<String>}");
+    testStringify("...{a:(String&Number),b,c:Array.<String>}");
+    testStringify("{a:(String&Number),b,c:Array.<String>}=");
 
     // fn types
     testStringify("function(a)");
@@ -76,6 +84,10 @@ describe('stringify', function () {
     testStringify("function(a:number,callback:function(a:Array.<(String|Number|Object)>):boolean):String");
     testStringify("function(a:(string|number),this:string,new:true):function():number");
     testStringify("function(a:(string|number),this:string,new:true):function(a:function(val):result):number");
+    testStringify("function(a:number,b:Array.<(String&Number&Object)>):String");
+    testStringify("function(a:number,callback:function(a:Array.<(String&Number&Object)>):boolean):String");
+    testStringify("function(a:(string&number),this:string,new:true):function():number");
+    testStringify("function(a:(string&number),this:string,new:true):function(a:function(val):result):number");
 
     // literal types
     testStringify('"Hello, World!"');
@@ -249,6 +261,40 @@ describe('Expression', function () {
                 name: 'Number'
             }]
         }, { topLevel: true }).should.equal('String|Number');
+    });
+
+    it('IntersectionType', function () {
+        // Even though a single element within parens will be parsed as a UnionType,
+        // the stringified result for this node should still be the same.
+        doctrine.type.stringify({
+            type: doctrine.Syntax.IntersectionType,
+            elements: [{
+                type: doctrine.Syntax.NameExpression,
+                name: 'String'
+            }]
+        }).should.equal('(String)');
+
+        doctrine.type.stringify({
+            type: doctrine.Syntax.IntersectionType,
+            elements: [{
+                type: doctrine.Syntax.NameExpression,
+                name: 'String'
+            }, {
+                type: doctrine.Syntax.NameExpression,
+                name: 'Number'
+            }]
+        }).should.equal('(String&Number)');
+
+        doctrine.type.stringify({
+            type: doctrine.Syntax.IntersectionType,
+            elements: [{
+                type: doctrine.Syntax.NameExpression,
+                name: 'String'
+            }, {
+                type: doctrine.Syntax.NameExpression,
+                name: 'Number'
+            }]
+        }, { topLevel: true }).should.equal('String&Number');
     });
 
     it('RestType', function () {
