@@ -2540,6 +2540,21 @@ describe('optional params', function() {
         });
     });
 
+    it('range reaching end of tag', function() {
+        var res = doctrine.parse("/**@example", { range: true, unwrap: true });
+
+        res.should.eql({
+            description: '',
+            tags: [
+                {
+                    title: 'example',
+                    description: '',
+                    range: [3, 11]
+                }
+            ]
+        })
+    });
+
     it('example caption', function() {
         var res = doctrine.parse(
             [
