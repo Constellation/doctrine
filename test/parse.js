@@ -427,6 +427,42 @@ describe('parse', function () {
         });
     });
 
+    it('param with path', function () {
+        var res = doctrine.parse(
+            [
+                "/**",
+                " * @param {./path/to/module.MyClass} arg - The description.",
+                "*/"
+            ].join('\n'), { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'param');
+        res.tags[0].should.have.property('name', 'arg');
+        res.tags[0].should.have.property('description', 'The description.');
+        res.tags[0].should.have.property('type');
+        res.tags[0].type.should.eql({
+            type: 'NameExpression',
+            name: './path/to/module.MyClass'
+        });
+    });
+
+    it('param with .. path', function () {
+        var res = doctrine.parse(
+            [
+                "/**",
+                " * @param {../path/to/module.MyClass} arg - The description.",
+                "*/"
+            ].join('\n'), { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'param');
+        res.tags[0].should.have.property('name', 'arg');
+        res.tags[0].should.have.property('description', 'The description.');
+        res.tags[0].should.have.property('type');
+        res.tags[0].type.should.eql({
+            type: 'NameExpression',
+            name: '../path/to/module.MyClass'
+        });
+    });
+
     it('param with properties', function () {
         var res = doctrine.parse(
             [
