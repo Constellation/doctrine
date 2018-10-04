@@ -427,6 +427,23 @@ describe('parse', function () {
         });
     });
 
+    it('param with typeof', function() {
+        var res = doctrine.parse(
+            [
+                "/**",
+                " * @param {typeof String} userName",
+                "*/"
+            ].join('\n'), { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'param');
+        res.tags[0].should.have.property('name', 'userName');
+        res.tags[0].should.have.property('type');
+        res.tags[0].type.should.eql({
+            type: 'NameExpression',
+            name: 'typeof String'
+        });
+    });
+
     it('param with import', function () {
         var res = doctrine.parse(
             [
@@ -442,6 +459,24 @@ describe('parse', function () {
         res.tags[0].type.should.eql({
             type: 'NameExpression',
             name: 'import("path/to/module")'
+        });
+    });
+
+    it('param with typeof and import', function () {
+        var res = doctrine.parse(
+            [
+                '/**',
+                ' * @param {typeof import("path/to/module")} arg - The description.',
+                ' */'
+            ].join('\n'), { unwrap: true });
+        res.tags.should.have.length(1);
+        res.tags[0].should.have.property('title', 'param');
+        res.tags[0].should.have.property('name', 'arg');
+        res.tags[0].should.have.property('description', 'The description.');
+        res.tags[0].should.have.property('type');
+        res.tags[0].type.should.eql({
+            type: 'NameExpression',
+            name: 'typeof import("path/to/module")'
         });
     });
 
